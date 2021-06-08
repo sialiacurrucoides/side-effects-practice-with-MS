@@ -41,7 +41,17 @@ const Login = (props) => {
   };
 
   useEffect(() => {
-    setFormIsValid(enteredEmail.includes('@') && enteredPassword.trim().length > 6);
+    // debouncing - not to validate after each keystroke, but after a pause
+    const identifier = setTimeout(
+      () => {
+        setFormIsValid(enteredEmail.includes('@') && enteredPassword.trim().length > 6);
+      },
+      500
+    );
+    // cleanup - does not run after the very first cycle; then runs at each render cycle
+    return () => {
+      clearTimeout(identifier);
+    };
   }, [enteredPassword, enteredEmail]);
 
   return (
